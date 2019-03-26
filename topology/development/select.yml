@@ -1,0 +1,23 @@
+version: '3.2'
+
+services:
+  redis_account:
+  redis_metering:
+  redis_codedb:
+  haproxy:
+  landing:
+    # entrypoint: /bin/true
+  account:
+    # entrypoint: /bin/true
+  breadboard:
+    # entrypoint: /bin/true
+  codedb:
+    # ports:
+    #   - 8585:8585
+    # entrypoint: /bin/true
+  gateway:
+    # entrypoint: /bin/true
+  orchestrator:
+    # entrypoint: /bin/true
+  tailf:
+    # entrypoint: /bin/true

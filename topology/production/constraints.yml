@@ -1,0 +1,91 @@
+version: '3.2'
+
+services:
+  redis_account:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+  redis_metering:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+  redis_codedb:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+  redis_tailf:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+  haproxy:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+          # - node.labels.topology == frontend
+      restart_policy:
+        condition: on-failure
+  landing:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+          # - node.labels.topology == frontend
+      restart_policy:
+        condition: on-failure
+  account:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+  breadboard:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+          # - node.labels.topology == frontend
+      restart_policy:
+        condition: on-failure
+  codedb:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+  gateway:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+          # - node.labels.topology == frontend
+      restart_policy:
+        condition: on-failure
+  orchestrator:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+  tailf:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure

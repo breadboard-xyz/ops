@@ -1,0 +1,6 @@
+{
+  "tls": true,
+  "tlscacert": "/certs/ca.pem",
+  "tlscert": "/certs/server-cert.pem",
+  "tlskey": "/certs/server-key.pem"
+}

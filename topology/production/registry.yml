@@ -1,0 +1,36 @@
+version: '3.2'
+
+networks:
+  backend:
+
+services:
+  registry:
+    image: registry:2
+    ports:
+      - "5000:80"
+      # - "443:443"
+    environment:
+      # REGISTRY_AUTH: htpasswd
+      # REGISTRY_AUTH_HTPASSWD_PATH: /run/secrets/auth/htpasswd
+      # REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_HTTP_ADDR: 0.0.0.0:80
+    #   REGISTRY_HTTP_TLS_CERTIFICATE: /run/secrets/certs/domain.crt
+    #   REGISTRY_HTTP_TLS_KEY: /run/secrets/certs/domain.key
+    volumes:
+      - type: bind
+        source: ./data/registry
+        target: /var/lib/registry
+      - type: bind
+        source: ./secret/breadboard.io/registry/auth
+        target: /run/secrets/auth
+        read_only: true
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+      restart_policy:
+        condition: on-failure
+    networks:
+      backend:
+        aliases:
+          - docker.breadboard.xyz

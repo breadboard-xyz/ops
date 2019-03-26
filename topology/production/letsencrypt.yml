@@ -1,0 +1,38 @@
+version: '3.2'
+
+networks:
+  frontend:
+
+services:
+  letsencrypt:
+    image: "certbot/certbot"
+    entrypoint: /opt/bin/create.sh
+    working_dir: /opt/bin
+    volumes:
+      - type: bind
+        source: ./data/letsencrypt
+        target: /etc/letsencrypt
+        read_only: false
+      - type: bind
+        source: ./configuration/letsencrypt/opt/bin/
+        target: /opt/bin
+        read_only: true
+    environment:
+      - CERTBOT_EMAIL=certbot@breadboard.io
+      - CERTBOT_CERT_NAME=haproxy
+      - CERTBOT_DOMAIN_LIST_FILE=/opt/bin/domains.txt
+      - CERTBOT_CRON_RENEW="0 3 * * *"
+    deploy:
+      placement:
+        constraints:
+          - node.labels.topology == backend
+          # - node.labels.topology == frontend
+      restart_policy:
+        # condition: none
+        condition: on-failure
+        delay: 15s
+        max_attempts: 10
+    networks:
+      frontend:
+        aliases:
+          - letsencrypt.breadboard.xyz

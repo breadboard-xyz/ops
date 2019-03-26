@@ -1,0 +1,15 @@
+version: '3.2'
+
+services:
+  mongo:
+    image: mongo:3.6
+    restart: always
+    volumes:
+      - type: bind
+        source: ./data/mongodb/database
+        target: /data/db
+        read_only: false
+    networks:
+      database:
+        aliases:
+          - mongodb.breadboard.xyz

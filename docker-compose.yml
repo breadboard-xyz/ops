@@ -1,0 +1,215 @@
+version: '3.2'
+
+networks:
+  backend:
+  frontend:
+  database:
+services:
+  redis_account:
+    image: "redis:alpine"
+    volumes:
+      - type: bind
+        source: ./data/redis_account/database
+        target: /data
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+        aliases:
+          - account.redis.breadboard.xyz
+  redis_metering:
+    image: "redis:alpine"
+    volumes:
+      - type: bind
+        source: ./data/redis_metering/database
+        target: /data
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+        aliases:
+          - metering.redis.breadboard.xyz
+  redis_codedb:
+    image: "redis:alpine"
+    volumes:
+      - type: bind
+        source: ./data/redis_codedb/database
+        target: /data
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+        aliases:
+          - codedb.redis.breadboard.xyz
+  redis_tailf:
+    image: "redis:alpine"
+    volumes:
+      - type: bind
+        source: ./data/redis_tailf/database
+        target: /data
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+        aliases:
+          - tailf.redis.breadboard.xyz
+  haproxy:
+    # image: "haproxy:alpine"
+    image: "mminks/haproxy-docker-logging"
+    volumes:
+      - type: bind
+        source: ./configuration/haproxy/haproxy.cfg
+        target: /usr/local/etc/haproxy/haproxy.cfg
+        read_only: true
+    ports:
+      - 80:80
+      - 443:443
+      - 6500:6500
+      - 6501:6501
+      - 6502:6502
+      - 6503:6503
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      frontend:
+      backend:
+  landing:
+    image: "gcr.io/breadboard-xyz/github_a7medkamel_taskmill-ui:6652e9655ac967c2fab7a85d6ac5952cf6e8001a"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - type: bind
+        source: ./configuration/landing/config
+        target: /src/config_js
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      frontend:
+        aliases:
+          - landing.breadboard.xyz
+  account:
+    image: "gcr.io/breadboard-xyz/github_breadboard-xyz_account:481ad1cfc1d0e0d617676d2b57a6d2bf32f936b0"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - type: bind
+        source: ./configuration/account/config
+        target: /src/config
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      frontend:
+        aliases:
+          - account.breadboard.xyz
+      backend:
+        aliases:
+          - account.breadboard.xyz
+  breadboard:
+    image: "gcr.io/breadboard-xyz/breadboard:e66fb599ce145e4ec00ac41303fb6537cbced0a7"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - type: bind
+        source: ./configuration/breadboard/config
+        target: /src/config
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      frontend:
+        aliases:
+          - oss.breadboard.xyz
+      backend:
+  codedb:
+    image: "gcr.io/breadboard-xyz/codedb:100aee9827748e768af34017f48e6aa54b7d3b5c"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        # read_only: true
+      - type: bind
+        source: ./data/codedb/database
+        target: /src/.db
+      - type: bind
+        source: ./configuration/codedb/config
+        target: /src/config
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      backend:
+        aliases:
+          - code.breadboard.xyz
+  gateway:
+    image: "gcr.io/breadboard-xyz/gateway:6dbf8d5ecc737552ee68338cbd470756bddffee0"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - type: bind
+        source: ./configuration/gateway/config
+        target: /src/config
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      frontend:
+        aliases:
+          - gateway.breadboard.xyz
+      backend:
+        aliases:
+          - gateway.breadboard.xyz
+  orchestrator:
+    image: "gcr.io/breadboard-xyz/orchestrator:0057329a38e38bd63f6077f9fbb26860a8c6bdbb"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - type: bind
+        source: ./configuration/orchestrator/config
+        target: /src/config
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      backend:
+  tailf:
+    image: "gcr.io/breadboard-xyz/github.com/tailf-xyz/tailf:6aa3573290b2fa90dd7e4d3264101fe775ed61bd"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - type: bind
+        source: ./configuration/tailf/config
+        target: /src/config
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      database:
+      backend:
+        aliases:
+          - tailf.breadboard.xyz
+      frontend:
+        aliases:
+          - tailf.breadboard.xyz
