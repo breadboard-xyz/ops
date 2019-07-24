@@ -179,7 +179,7 @@ services:
         aliases:
           - gateway.breadboard.xyz
   orchestrator:
-    image: "gcr.io/breadboard-xyz/orchestrator:0057329a38e38bd63f6077f9fbb26860a8c6bdbb"
+    image: "gcr.io/breadboard-xyz/orchestrator:09bd557ae31c8f4b29109d795c28be9147dab125"
     environment:
       NODE_ENV: production
     volumes:
