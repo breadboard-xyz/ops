@@ -194,7 +194,7 @@ services:
       database:
       backend:
   tailf:
-    image: "gcr.io/breadboard-xyz/github.com/tailf-xyz/tailf:3532d7cff9aea5758c5e599492c42198919daa79"
+    image: "gcr.io/breadboard-xyz/github.com/tailf-xyz/tailf:8af1551c591458e5f6489e7a48504fd35ac409f9"
     environment:
       NODE_ENV: production
     volumes:
