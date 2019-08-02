@@ -3,13 +3,13 @@ ifeq ($(secret_dir),)
 endif
 
 config:
-	docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f ./topology/development/code.yml -f ./topology/development/select.yml config
+	docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f local.yml config
 
 up.breadboard.io:
 	docker stack deploy --with-registry-auth --compose-file=./docker-compose.yml --compose-file=./topology/production/constraints.yml --compose-file=./topology/development/secret.yml --compose-file=./topology/production/letsencrypt.yml breadboard-io
 
 up:
-	secret_dir=$(secret_dir) docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f ./topology/development/localhost.yml -f ./topology/development/code.yml -f ./topology/development/select.yml up
+	secret_dir=$(secret_dir) docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f ./topology/development/localhost.yml -f local.yml up
 
 down.breadboard.io:
 	docker stack rm breadboard-io || true
@@ -19,7 +19,7 @@ down.breadboard.io:
 	docker system prune -f
 
 down:
-	secret_dir=$(secret_dir) docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f ./topology/development/code.yml -f ./topology/development/select.yml down
+	secret_dir=$(secret_dir) docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f local.yml down
 
 	# docker run --rm \
 	#      --network=kong-net \
