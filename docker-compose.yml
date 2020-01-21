@@ -59,13 +59,14 @@ services:
           - tailf.redis.breadboard.xyz
   haproxy:
     # image: "haproxy:alpine"
-    image: "mminks/haproxy-docker-logging"
+    image: "mminks/haproxy-docker-logging:latest"
     volumes:
       - type: bind
         source: ./configuration/haproxy/haproxy.cfg
         target: /usr/local/etc/haproxy/haproxy.cfg
         read_only: true
     ports:
+      - 808404:8404
       - 80:80
       - 443:443
       - 6500:6500
