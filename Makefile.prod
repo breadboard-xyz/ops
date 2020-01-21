@@ -3,7 +3,7 @@ ifeq ($(secret_dir),)
 endif
 
 config:
-	docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f local.yml config
+	docker-compose -f ./docker-compose.yml -f ./topology/production/constraints.yml -f ./topology/development/secret.yml -f ./topology/production/letsencrypt.yml config
 
 up:
 	docker stack deploy --with-registry-auth --compose-file=./docker-compose.yml --compose-file=./topology/production/constraints.yml --compose-file=./topology/development/secret.yml --compose-file=./topology/production/letsencrypt.yml breadboard-io

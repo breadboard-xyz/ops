@@ -4,6 +4,12 @@ networks:
   frontend:
 
 services:
+  haproxy:
+    volumes:
+      - type: bind
+        source: ./data/letsencrypt/live/haproxy/
+        target: /run/secrets/ssl
+        read_only: true
   letsencrypt:
     image: "certbot/certbot"
     entrypoint: /opt/bin/create.sh
