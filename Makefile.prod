@@ -1,0 +1,16 @@
+ifeq ($(secret_dir),)
+  $(error secret_dir is not set)
+endif
+
+config:
+	docker-compose -f docker-compose.yml -f ./topology/development/secret.yml -f local.yml config
+
+up:
+	docker stack deploy --with-registry-auth --compose-file=./docker-compose.yml --compose-file=./topology/production/constraints.yml --compose-file=./topology/development/secret.yml --compose-file=./topology/production/letsencrypt.yml breadboard-io
+
+down:
+	docker stack rm breadboard-io || true
+	sleep 10
+	docker container prune -f
+	sleep 10
+	docker system prune -f
