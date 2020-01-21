@@ -16,5 +16,8 @@ down:
 	docker system prune -f
 
 ssl:
-	cp ./data/letsencrypt/live/haproxy/fullchain.pem $(secret_dir)/haproxy/ssl/fullchain.pem
-	docker exec -d $$(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}") service haproxy reload 
+	cat ./data/letsencrypt/live/haproxy/fullchain.pem ./data/letsencrypt/live/haproxy/privkey.pem > $(secret_dir)/haproxy/ssl/fullchain.pem
+	docker kill -s HUP $$(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}")
+
+# docker exec -d $$(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}") service haproxy reload 
+# docker kill -s HUP $(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}")
