@@ -17,4 +17,4 @@ down:
 
 ssl:
 	cp ./data/letsencrypt/live/haproxy/fullchain.pem $(secret_dir)/haproxy/ssl/fullchain.pem
-	docker exec -d $$(docker ps --filter="name=breadboard-io_letsencrypt" --format="{{.ID}}") service haproxy reload 
+	docker exec -d $$(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}") service haproxy reload 
