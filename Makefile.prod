@@ -5,7 +5,7 @@ endif
 config:
 	docker-compose -f ./docker-compose.yml -f ./topology/production/constraints.yml -f ./topology/development/secret.yml -f ./topology/production/letsencrypt.yml config
 
-up: ssl
+up:
 	docker stack deploy --with-registry-auth --compose-file=./docker-compose.yml --compose-file=./topology/production/constraints.yml --compose-file=./topology/development/secret.yml --compose-file=./topology/production/letsencrypt.yml breadboard-io
 
 down:
@@ -17,3 +17,4 @@ down:
 
 ssl:
     cp ./data/letsencrypt/live/haproxy/fullchain.pem ${secret_dir}/haproxy/ssl/fullchain.pem
+    docker exec -d ubuntu_bash touch /tmp/execWorks
