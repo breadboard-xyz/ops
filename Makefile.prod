@@ -7,6 +7,7 @@ config:
 
 up:
 	docker stack deploy --with-registry-auth --compose-file=./docker-compose.yml --compose-file=./topology/production/constraints.yml --compose-file=./topology/development/secret.yml --compose-file=./topology/production/letsencrypt.yml breadboard-io
+	$(MAKE) ssl
 
 down:
 	docker stack rm breadboard-io || true
@@ -18,6 +19,7 @@ down:
 ssl:
 	cat ./data/letsencrypt/live/haproxy/fullchain.pem ./data/letsencrypt/live/haproxy/privkey.pem > $(secret_dir)/haproxy/ssl/fullchain.pem
 	docker kill -s HUP $$(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}")
+	openssl x509 -in $(secret_dir)/haproxy/ssl/fullchain.pem -noout -text
 
 # docker exec -d $$(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}") service haproxy reload 
 # docker kill -s HUP $(docker ps --filter="name=breadboard-io_haproxy" --format="{{.ID}}")
