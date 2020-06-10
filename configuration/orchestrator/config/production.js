@@ -13,6 +13,11 @@ module.exports = {
   },
   "orchestrator" : {
     "name"      : "default_orchestrator",
+    "k8s": {
+      "config": _.trim(
+        fs.readFileSync('/run/secrets/k8s/config', 'utf-8')
+      ),
+    },
     "swarm"     : {
       "hostname"  : _.trim(fs.readFileSync('/run/secrets/swarm/hostname', 'utf-8')),
       "protocol"  : 'https',
